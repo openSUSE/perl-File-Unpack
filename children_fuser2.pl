@@ -1,7 +1,7 @@
 #! /usr/bin/perl -w
 # 
-# children_fuser.pl -- find children of a given process 
-#                      that have opened a given file.
+# children_fuser2.pl -- find children of a given process 
+#                       that have opened a given file.
 #
 # 2010-07-31, jw - initial version (not using Proc::ProcessTable)
 
