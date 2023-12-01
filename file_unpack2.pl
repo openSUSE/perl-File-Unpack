@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w
+#! /usr/bin/env perl
 #
 # file_unpack2.pl -- Demo of File::Unpack2 features.
 # 
