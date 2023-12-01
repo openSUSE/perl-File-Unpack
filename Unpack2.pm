@@ -45,7 +45,7 @@
 use warnings;
 use strict;
 
-package File::Unpack;
+package File::Unpack2;
 
 BEGIN
 {
@@ -67,7 +67,7 @@ use File::Copy ();
 use File::Compare ();
 use JSON;
 use String::ShellQuote;		# used in _prep_configdir 
-use IPC::Run;			# implements File::Unpack::run()
+use IPC::Run;			# implements File::Unpack2::run()
 use Text::Sprintf::Named;	# used to parse @builtin_mime_helpers
 use Cwd 'getcwd';		# run(), moves us there and back. 
 use Data::Dumper;
@@ -75,7 +75,7 @@ use POSIX ();
 
 =head1 NAME
 
-File::Unpack - A strong bz2/gz/zip/tar/cpio/rpm/deb/cab/lzma/7z/rar/... archive unpacker, based on mime-types
+File::Unpack2 - A strong bz2/gz/zip/tar/cpio/rpm/deb/cab/lzma/7z/rar/... archive unpacker, based on mime-types
 
 =head1 VERSION
 
@@ -104,7 +104,7 @@ my $UNCOMP_BUFSZ = 1024;
 
 # unpack will give up, after unpacking that many levels. It is more likely we
 # got into a loop by then, than really have that many levels.
-my $RECURSION_LIMIT = 200;
+my $RECURSION_LIMIT = 50;
 
 # Suggested place, where admins should install the helpers bundled with this module.
 sub _default_helper_dir { $ENV{FILE_UNPACK_HELPER_DIR}||'/usr/share/File-Unpack/helper' }
@@ -214,7 +214,7 @@ This perl module comes with an executable script:
 /usr/bin/file_unpack [-1] [-m] ARCHIVE_FILE ...
 
 
-File::Unpack is an unpacker for archives and files
+File::Unpack2 is an unpacker for archives and files
 (bz2/gz/zip/tar/cpio/iso/rpm/deb/cab/lzma/7z/rar ... pdf/odf) based on
 MIME types.  We call it strong, because it is not fooled by file suffixes, or
 multiply wrapped packages. It recursively descends into each archive found
@@ -222,10 +222,10 @@ until it finally exposes all unpackable payload contents.
 
 A logfile can be written, precisely describing MIME types and unpack actions.
 
-    use File::Unpack;
+    use File::Unpack2;
 
     my $log;
-    my $u = File::Unpack->new(logfile => \$log);
+    my $u = File::Unpack2->new(logfile => \$log);
 
     my $m = $u->mime('/etc/init.d/rc');
     print "$m->[0]; charset=$m->[1]\n";
@@ -628,7 +628,7 @@ sub new
       eval 
         { 
 	  no strict; 
-	  # helper/application=x-shellscript calls File::Unpack->new(), with defaults...
+	  # helper/application=x-shellscript calls File::Unpack2->new(), with defaults...
 	  my @have = BSD::Resource::getrlimit(RLIMIT_FSIZE);
 	  if ($have[0] == RLIM_INFINITY or $have[0] > $obj{maxfilesize})
 	    {
@@ -855,7 +855,7 @@ sub unpack
 
   if (($self->{recursion_level}||0) > $RECURSION_LIMIT)
     {
-      push @{$self->{error}}, "unpack('$archive','$destdir'): recursion limit $RECURSION_LIMIT";
+      warn "unpack('$archive','$destdir'): recursion limit $RECURSION_LIMIT";
       ## this is only an emergency stop.
       return 1;
     }
@@ -1081,7 +1081,7 @@ sub unpack
 
 	      # die Dumper "_run_mime_helper: $archive, $new_name, $destdir", readlink($unpacked), $unpacked;
 
-              unless (ref $unpacked or -e $unpacked)
+              unless (ref $unpacked or -e $unpacked or readlink($unpacked))
                 {
                   warn("archive=$archive, new_name=$new_name\n");
 		  die("assert -e '$unpacked'") 
@@ -1245,7 +1245,7 @@ restrict your redirection operators to the forms '<', '0<', '1>', '2>', or '>&' 
 to limitations in the precedence logic. Piping via '|' is properly recognized, 
 but background execution '&' may confuse the precedence logic.
 
-This C<run> method is completly independent of the rest of File::Unpack. It works both
+This C<run> method is completly independent of the rest of File::Unpack2. It works both
 as a static function and as a method call.
 It is used internally by C<unpack>, but is exported to be of use elsewhere.
 
@@ -1348,7 +1348,7 @@ sub run
 
 =head2 fmt_run_shellcmd
 
-File::Unpack::fmt_run_shellcmd( $m->{argvv} )
+File::Unpack2::fmt_run_shellcmd( $m->{argvv} )
 
 Static function to pretty print the return value $m of method find_mime_helper();
 It formats a command array used with run() as a properly escaped shell command string.
@@ -1662,7 +1662,7 @@ sub _unused_pathname
       ## try to come up with a very similar name, just different suffix.
       ## be compatible with path name shortening in unpack()
       my $test_path = $wanted_path . '._';
-      for my $i ('', 1..999)
+      for my $i ('', 1..99999)
         {
 	  # All our mime detectors work on file contents, rather than on suffixes.
 	  # Thus messing with the suffix should be okay here.
@@ -2301,7 +2301,11 @@ sub mime
 
   ## flm can say 'cannot open \'IP\' (No such file or directory)'
   ## flm can say 'CDF V2 Document, corrupt: Can\'t read SAT'	(application/vnd.ms-excel)
-  my $mime1 = $flm->checktype_contents($in{buf});
+  my $mime1 = eval { $flm->checktype_contents($in{buf}) };
+  if ($@) {
+    warn $@;
+    return [ 'x-system/x-error', undef, "libmimemagic exception"];
+  }
   if ($mime1 =~ m{, corrupt: } or $mime1 =~ m{^application/octet-stream\b})
     {
       # application/x-iso9660-image is reported as application/octet-stream if the buffer is short.
@@ -2504,7 +2508,7 @@ sub mime
     }
 
   ## try to get at the second level mime type, for some well known linear compressors.
-  while (length $uncomp_buf && $r[0] =~ m{^application/(x-)?([+\w]+)$})
+  while (length $uncomp_buf && $r[0] =~ m{^application/(x-)?([+\w]+)$} && !$in{recursion})
     {
       my $compname = $2;
       my $next_uncomp_buf = '';
@@ -2518,6 +2522,8 @@ sub mime
       #########
 
       my $m2 = $self->mime(buf => $uncomp_buf, file => $in{file}, uncomp => \$next_uncomp_buf, recursion => 1);
+      # protecting against http://www.maximumcompression.com/selfgz.gz
+      last if length($uncomp_buf) == length($next_uncomp_buf);
       my ($a,$xminus,$b) = ($m2->[0] =~ m{^(.*)/(x-)?(.*)$});
       if ($a eq 'application')
         {
@@ -2596,7 +2602,7 @@ automatically be notified of progress on your bug as I make changes.
 
 =head1 RELATED MODULES
 
-While designing File::Unpack, a range of other perl modules were examined. Many modules provide valuable service to File::Unpack and became dependencies or are recommended.
+While designing File::Unpack2, a range of other perl modules were examined. Many modules provide valuable service to File::Unpack2 and became dependencies or are recommended.
 Others exposed drawbacks during closer examination and may find some of their
 wheels re-invented here.
 
@@ -2681,7 +2687,7 @@ useful mimetypes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc File::Unpack
+    perldoc File::Unpack2
 
 
 You can also look for information at:
@@ -2718,7 +2724,7 @@ git clone L<https://github.com/jnweiger/perl-File-Unpack.git>
 =head1 ACKNOWLEDGEMENTS
 
 MIME type recognition relies heavily on libmagic by Christos Zoulas. I had long 
-hesitated implementing File::Unpack, but set to work, when I dicovered
+hesitated implementing File::Unpack2, but set to work, when I dicovered
 that File::LibMagic brings your library to perl. Thanks Christos. And thanks
 for tcsh too.
 
@@ -2735,4 +2741,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of File::Unpack
+1; # End of File::Unpack2

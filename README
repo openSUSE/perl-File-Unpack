@@ -1,8 +1,12 @@
-File-Unpack
+File-Unpack2
 
-File::Unpack is an aggressive unpacker for archive files. We call it aggressive, 
+This is a fork of File::Unpack (https://github.com/jnweiger/perl-File-Unpack) for use with
+Cavil (https://github.com/openSUSE/cavil/). It has been started because the original File::Unpack is not being
+maintained anymore.
+
+File::Unpack2 is an aggressive unpacker for archive files. We call it aggressive, 
 because it recursivly descends into any freshly unpacked file, if it appears to be an archive itself.
-It also uncompresses files where needed. The ultimate goal of File::Unpack is
+It also uncompresses files where needed. The ultimate goal of File::Unpack2 is
 to extract as much readable text (ascii or any other encoding) as possible.
 Most of the currently known archive file formats are supported.
 
@@ -58,7 +62,7 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc File::Unpack
+    perldoc File::Unpack2
 
 You can also look for information at:
 

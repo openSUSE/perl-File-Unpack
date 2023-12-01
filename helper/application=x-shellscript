@@ -54,13 +54,13 @@
 
 BEGIN
 {
-  eval "use File::Unpack;";
+  eval "use File::Unpack2;";
   eval "use File::LibMagic;";
 }
 #use Data::Dumper;
 
 my $verbose = 0;
-my $fu = eval "File::Unpack->new(logfile => '/dev/null', verbose => 0);";
+my $fu = eval "File::Unpack2->new(logfile => '/dev/null', verbose => 0);";
 my $flm = File::LibMagic->new() unless defined $fu;
 
 my $input_file = shift;
@@ -95,7 +95,7 @@ while (defined(my $line = <IN>))
       {
         my $new_off = tell IN;
 	seek IN, $offset, 0;
-	die "$0: use File::Unpack failed. Fallback to File::LibMagic not impl." unless $fu;
+	die "$0: use File::Unpack2 failed. Fallback to File::LibMagic not impl." unless $fu;
 
 	if (my $m = $fu->mime(fd => \*IN))
 	  {

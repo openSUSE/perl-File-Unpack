@@ -1,6 +1,6 @@
 #! /usr/bin/perl
 #
-# multipart/* - handler for File::Unpack
+# multipart/* - handler for File::Unpack2
 #
 # 2012 (C) jw@suse.de, distribute under GPLv2
 #

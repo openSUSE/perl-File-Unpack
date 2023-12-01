@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 #
-# file_unpack.pl -- Demo of File::Unpack features.
+# file_unpack.pl -- Demo of File::Unpack2 features.
 # 
 # (C) 2010-2014, jnw@cpan.org, all rights reserved.
 # Distribute under the same license as Perl itself.
@@ -25,9 +25,9 @@ use Getopt::Long qw(:config no_ignore_case);
 use Pod::Usage;
 use FindBin;
 use lib "$FindBin::RealBin/blib/lib";
-use File::Unpack;
+use File::Unpack2;
 
-my $version = $File::Unpack::VERSION;
+my $version = $File::Unpack2::VERSION;
 my @exclude;
 my $exclude_vcs = 1;
 my $help;
@@ -174,7 +174,7 @@ if (defined $opt{logfile})
   }
 
 $opt{logfile} ||= '/dev/null' if $list_only or $list_perlish or $mime_only or $opt{no_op};
-my $u = File::Unpack->new(%opt);
+my $u = File::Unpack2->new(%opt);
 my $list = $u->mime_helper_dir(@mime_helper_dirs);
 
 if ($list_perlish)
@@ -196,7 +196,7 @@ if ($mime_only)
       {
         print "using File::LibMagic $File::LibMagic::VERSION\n" if defined $File::LibMagic::VERSION;
         print "using File::MimeInfo::Magic $File::MimeInfo::Magic::VERSION\n" if defined $File::MimeInfo::Magic::VERSION;
-        print "using File::Unpack $File::Unpack::VERSION\n" if defined $File::Unpack::VERSION;
+        print "using File::Unpack2 $File::Unpack2::VERSION\n" if defined $File::Unpack2::VERSION;
       }
 
     while (defined $archive)
@@ -206,7 +206,7 @@ if ($mime_only)
 	if ($opt{verbose} > 1)
 	  {
 	    print "$archive: ", Dumper $m;
-	    print File::Unpack::fmt_run_shellcmd($h) . "\n";
+	    print File::Unpack2::fmt_run_shellcmd($h) . "\n";
 	  }
 	elsif ($opt{verbose} == 1)
 	  {
@@ -233,11 +233,11 @@ while (defined $archive and !$u->{error})
       {
         if (defined $opt{logfile} and -f $opt{logfile})
 	  {
-            warn "File::Unpack($archive): overwriting previous logfile $opt{logfile} in 3 seconds. Press CTRL-C to abort.\n" if defined $archive;
+            warn "File::Unpack2($archive): overwriting previous logfile $opt{logfile} in 3 seconds. Press CTRL-C to abort.\n" if defined $archive;
 	    sleep(3);
 	  }
         # reload, for the next round. (new() opens the logfile, unpack() closese it.)
-        $u = File::Unpack->new(%opt);
+        $u = File::Unpack2->new(%opt);
         $u->mime_helper_dir(@mime_helper_dirs);
       }
   }

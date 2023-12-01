@@ -4,7 +4,7 @@
 use Test::More qw(no_plan);
 use FindBin;
 BEGIN { unshift @INC, "$1/../blib/lib" if $FindBin::Bin =~ m{(.*)} };
-use File::Unpack;
+use File::Unpack2;
 use File::Temp;
 use JSON;
 
@@ -12,7 +12,7 @@ use JSON;
 
 my $testdir = File::Temp::tempdir("FU_06_XXXXX", TMPDIR => 1, CLEANUP => 1);
 
-my $u = File::Unpack->new(destdir => $testdir, verbose => 0, logfile => "$testdir/log");
+my $u = File::Unpack2->new(destdir => $testdir, verbose => 0, logfile => "$testdir/log");
 $u->exclude(vcs => 1, add => ['data']);
 $u->unpack("t");
 ok(-f "$testdir/log", "have $testdir/log after unpacking");
@@ -25,7 +25,7 @@ ok(length($log->{end}), "end timstamp file seen");
 
 my $log_scalar;
 my $testdir2 = File::Temp::tempdir("FU_06_XXXXX", TMPDIR => 1, CLEANUP => 1);
-$u = File::Unpack->new(destdir => $testdir2, verbose => 0, logfile => \$log_scalar);
+$u = File::Unpack2->new(destdir => $testdir2, verbose => 0, logfile => \$log_scalar);
 $u->exclude(vcs => 1, add => ['data']);
 $u->unpack("t");
 my $log2 = JSON::from_json($log_scalar);

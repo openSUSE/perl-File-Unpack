@@ -45,7 +45,7 @@ sub module_boilerplate_ok {
     "placeholder date/time"       => qr(Date/time)
   );
 
-  module_boilerplate_ok('Unpack.pm');
+  module_boilerplate_ok('Unpack2.pm');
 
 TODO: {
   local $TODO = "Need to replace the boilerplate text";

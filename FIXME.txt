@@ -20,5 +20,5 @@ file_unpack-0.58 /var/tmp/build-root/home/abuild/rpmbuild/RPMS/noarch/MOPS-1.00-
   usr/lib/MOPS/a_plus_b.ass (text/plain)
   usr/lib/MOPS/bitshift.ass (text/plain)
   usr/lib/MOPS/mops.cfg (text/plain)
-  Can't locate object method "code" via package "Compress::Raw::Lzma::AloneDecoder" at /usr/lib/perl5/vendor_perl/5.16.0/File/Unpack.pm line 2369.
+  Can't locate object method "code" via package "Compress::Raw::Lzma::AloneDecoder" at /usr/lib/perl5/vendor_perl/5.16.0/File/Unpack2.pm line 2369.
 

@@ -3,14 +3,14 @@
 use Test::More;
 use FindBin;
 BEGIN { unshift @INC, "$1/../blib/lib" if $FindBin::Bin =~ m{(.*)} };
-use File::Unpack;
+use File::Unpack2;
 use Data::Dumper;
 
 diag("File::MimeInfo::Magic missing\n") unless $INC{'File/MimeInfo/Magic.pm'};
 diag("File::LibMagic missing\n") unless $INC{'File/LibMagic.pm'};
 my $shared_mime_info_db = '/usr/share/mime/magic';
 
-my $u = File::Unpack->new();
+my $u = File::Unpack2->new();
 
 my $d = "data"; $d = "t/data" unless -d $d;
 opendir DIR, $d or diag("where is my test data?");
@@ -52,7 +52,7 @@ my $sample = 'monotone.info';	# one of the below files, without regexps, for fur
 
   ## actually 'text/x-xslfo'
   'columns-snippet.fo' => 
-  	[ qr{^(text/plain|application/xml|text/x-application-xml)$}, 'us-ascii',
+    [ qr{^(text/plain|application/xml|text/x-application-xml|text/xml)$}, 'us-ascii',
 	  'XML  document text'],
 
   ## actually 'application/x-pax

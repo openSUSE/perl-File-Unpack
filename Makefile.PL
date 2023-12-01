@@ -3,10 +3,10 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'File::Unpack',
+    NAME                => 'File::Unpack2',
     AUTHOR              => q{Juergen Weigert <jnw@cpan.org>},
-    VERSION_FROM        => 'Unpack.pm',
-    ABSTRACT_FROM       => 'Unpack.pm',
+    VERSION_FROM        => 'Unpack2.pm',
+    ABSTRACT_FROM       => 'Unpack2.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),
@@ -55,6 +55,7 @@ sub MY::postamble
   return q{
 file_unpack: file_unpack.pl Makefile
 	$(CP) file_unpack.pl $@
+	mkdir -p $(INST_MAN1DIR)
 	## wait, so that -M < -M succeeds in ExtUtils/Command/MM.pm
 	(sleep 1; echo .nf; $(PERL) $@ --help) > $(INST_MAN1DIR)/$@.1 || true
 };

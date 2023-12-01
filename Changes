@@ -1,4 +1,8 @@
 
+1.0	kraih Mon Dec 01 15:00:00 CEST 2023
+  - Forked File::Unpack to start File::Unpack2.
+	- Applied all openSUSE patches.
+
 0.69	jw Mon Jul 21 17:21:13 CEST 2014
 	- fixed https://github.com/jnweiger/perl-File-Unpack/issues/2
 
@@ -81,7 +85,7 @@
 	  where $yes is 0, 1, or 2.
 	  We may want to use '1', if we are e.g. inside a legaldb_unpacked 
 	  tree, where everything is a symlink. This usage is experimental.
-	  A value of '2' is hideous and requires studying perldoc Unpack.pm
+	  A value of '2' is hideous and requires studying perldoc Unpack2.pm
 	  first.
 	- tracking $self->{inside_archives} added. Also experimental.
 
