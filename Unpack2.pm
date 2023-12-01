@@ -84,7 +84,7 @@ Version 0.69
 
 # We'll have 1.x versions only after minfree() has a baseline implementation.
 # Please run perl Makefile.PL after changing the version here.
-our $VERSION = '0.69';
+our $VERSION = '1.0';
 
 POSIX::setlocale(&POSIX::LC_ALL, 'C');
 $ENV{PATH} = '/usr/bin:/bin';
@@ -2730,6 +2730,7 @@ for tcsh too.
 
 =head1 LICENSE AND COPYRIGHT
 
+Copyright 2023 Sebastian Riedel
 Copyright 2010,2011,2012,2013 Juergen Weigert.
 
 This program is free software; you can redistribute it and/or modify it
