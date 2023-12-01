@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 #
-# file_unpack.pl -- Demo of File::Unpack2 features.
+# file_unpack2.pl -- Demo of File::Unpack2 features.
 # 
 # (C) 2010-2014, jnw@cpan.org, all rights reserved.
 # Distribute under the same license as Perl itself.
@@ -71,7 +71,7 @@ GetOptions(
 my $archive = shift or $list_perlish or $list_only or $help++;
 
 pod2usage(-verbose => 1, -msg => qq{
-file_unpack V$version Usage: 
+file_unpack2 V$version Usage: 
 
 $0 [options] input.tar.gz ...
 $0 [options] input/ ...

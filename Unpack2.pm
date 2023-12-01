@@ -107,7 +107,7 @@ my $UNCOMP_BUFSZ = 1024;
 my $RECURSION_LIMIT = 50;
 
 # Suggested place, where admins should install the helpers bundled with this module.
-sub _default_helper_dir { $ENV{FILE_UNPACK_HELPER_DIR}||'/usr/share/File-Unpack/helper' }
+sub _default_helper_dir { $ENV{FILE_UNPACK2_HELPER_DIR}||'/usr/share/File-Unpack2/helper' }
 
 # we use '=' in the mime_name, this expands to '/(x\-|ANY\+)?'
 ##
@@ -209,9 +209,9 @@ sub _locate_cpio_i
 
 This perl module comes with an executable script:
 
-/usr/bin/file_unpack -h
+/usr/bin/file_unpack2 -h
 
-/usr/bin/file_unpack [-1] [-m] ARCHIVE_FILE ...
+/usr/bin/file_unpack2 [-1] [-m] ARCHIVE_FILE ...
 
 
 File::Unpack2 is an unpacker for archives and files
@@ -250,9 +250,9 @@ plugins can be added to support additinal formats.
 
 Helper shell-scripts can be added to support additional mime-types. Example:
 
-F<< $ echo "ar x $1" > /usr/share/File-Unpack/helper/application=x-debian-package >>
+F<< $ echo "ar x $1" > /usr/share/File-Unpack2/helper/application=x-debian-package >>
 
-F<< $ chmod a+x /usr/share/File-Unpack/helper/application=x-debian-package >>
+F<< $ chmod a+x /usr/share/File-Unpack2/helper/application=x-debian-package >>
 
 This example creates a trivial external equivalent of the builtin MIME helper for *.deb packages. 
 For details see the documentation of the C<unpack()> method.
@@ -579,9 +579,9 @@ sub new
   $obj{logfile} ||= \*STDOUT;
   $obj{log_type} ||= 'json';	# or 'plain'
   $obj{log_type} = lc $obj{log_type};
-  $obj{maxfilesize} = $ENV{'FILE_UNPACK_MAXFILESIZE'}||'2.5G' unless defined $obj{maxfilesize};
+  $obj{maxfilesize} = $ENV{'FILE_UNPACK2_MAXFILESIZE'}||'2.5G' unless defined $obj{maxfilesize};
   $obj{maxfilesize} = _bytes_unit($obj{maxfilesize});
-  $ENV{'FILE_UNPACK_MAXFILESIZE'} = $obj{maxfilesize};	# so that children see the same.
+  $ENV{'FILE_UNPACK2_MAXFILESIZE'} = $obj{maxfilesize};	# so that children see the same.
 
   mkpath($obj{destdir}); # abs_path is unreliable if destdir does not exist
   $obj{destdir} = Cwd::fast_abs_path($obj{destdir});
@@ -752,8 +752,8 @@ The actual unpacking is dispatched to MIME type specific helpers,
 selected using C<mime>. A MIME helper can either be built-in code, or an
 external shell-script found in a directory registered with
 C<mime_helper_dir>. The standard place for external helpers is
-F</usr/share/File-Unpack/helper>; it can be changed by the environment variable
-F<FILE_UNPACK_HELPER_DIR> or the C<new> parameter C<helper_dir>.
+F</usr/share/File-Unpack2/helper>; it can be changed by the environment variable
+F<FILE_UNPACK2_HELPER_DIR> or the C<new> parameter C<helper_dir>.
 
 The naming of helper scripts is described under C<mime_helper()>.
 
@@ -1779,7 +1779,7 @@ sub _fuser_offset
 sub _prep_configdir
 {
   my ($self) = @_;
-  my $dir = "/tmp/file_unpack_$$/";
+  my $dir = "/tmp/file_unpack2_$$/";
   mkpath($dir);
   my $j = $self->{json}->allow_nonref();
 
@@ -2596,7 +2596,7 @@ Perl we have at least 5 modules for this; here we use two.
 The builtin list of MIME helpers is incomplete. Please submit your handler code.
 
 Please report any bugs or feature requests to C<bug-file-unpack at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-Unpack>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-Unpack2>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -2696,29 +2696,29 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-Unpack>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-Unpack2>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/File-Unpack>
+L<http://annocpan.org/dist/File-Unpack2>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/File-Unpack>
+L<http://cpanratings.perl.org/d/File-Unpack2>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/File-Unpack/>
+L<http://search.cpan.org/dist/File-Unpack2/>
 
 =back
 
 =head1 SOURCE REPOSITORY
 
-L<http://search.cpan.org/search?query=File%3A%3AUnpack>
+L<http://search.cpan.org/search?query=File%3A%3AUnpack2>
 
-L<http://github.com/jnweiger/perl-File-Unpack>
+L<https://github.com/openSUSE/perl-File-Unpack2>
 
-git clone L<https://github.com/jnweiger/perl-File-Unpack.git>
+git clone L<https://github.com/openSUSE/perl-File-Unpack2.git>
 
 
 =head1 ACKNOWLEDGEMENTS

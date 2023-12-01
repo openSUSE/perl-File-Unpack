@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'File::Unpack2',
-    AUTHOR              => q{Juergen Weigert <jnw@cpan.org>},
+    AUTHOR              => q{Sebastian Riedel <sri@cpan.org>},
     VERSION_FROM        => 'Unpack2.pm',
     ABSTRACT_FROM       => 'Unpack2.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
@@ -46,15 +46,15 @@ WriteMakefile(
     },
     # don't use bzip2 for cpan uploads, win32 smoke testers cannot unpack bz2.
     # dist                => { COMPRESS => 'bzip2 -9f', SUFFIX => 'bz2', },
-    clean               => { FILES => ['file_unpack', 'File-Unpack-*' ] },
-    EXE_FILES => [ 'file_unpack' ],
+    clean               => { FILES => ['file_unpack2', 'File-Unpack2-*' ] },
+    EXE_FILES => [ 'file_unpack2' ],
 );
 
 sub MY::postamble
 {
   return q{
-file_unpack: file_unpack.pl Makefile
-	$(CP) file_unpack.pl $@
+file_unpack2: file_unpack2.pl Makefile
+	$(CP) file_unpack2.pl $@
 	mkdir -p $(INST_MAN1DIR)
 	## wait, so that -M < -M succeeds in ExtUtils/Command/MM.pm
 	(sleep 1; echo .nf; $(PERL) $@ --help) > $(INST_MAN1DIR)/$@.1 || true

@@ -12,7 +12,7 @@ No idea... (Forget fakeroot. It fakes a root user, not a root filesystem)
 
 				jw, Thu Mar 14 19:51:33 CET 2013
 
-file_unpack -L logfile.log .
+file_unpack2 -L logfile.log .
 would list the logfile within itself. Avoid this!
 
 				jw, Thu Jan 24 11:39:37 CET 2013
@@ -45,7 +45,7 @@ Ideas:
 				jw, Wed May  4 11:58:27 CEST 2011
 
 debug 
-file_unpack /space/legaldb_nfs/auto-co/api.opensuse.org/mozilla\:Factory/js%1.8.5%r3/
+file_unpack2 /space/legaldb_nfs/auto-co/api.opensuse.org/mozilla\:Factory/js%1.8.5%r3/
 this pulls 1.7gb incore. why?
 
 				jw, Mon Mar 28 21:01:45 CEST 2011
@@ -85,7 +85,7 @@ How to decode Metamail contents?
  The firt part is usually html, and thus file -i says text/html
  ignoring the mime headers.
  
--> file_unpack -v -m 
+-> file_unpack2 -v -m 
   shows the multipart; header in the third filed.
 
  Content-Type: multipart/alternative;

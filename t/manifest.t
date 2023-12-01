@@ -17,7 +17,7 @@ else
   {
     ok_manifest({filter => [ qr{/\.(svn|git)\b}, 
 	qr/\.(sw.|files|orig|bak|old|tmp|tar\.bz2)$/,
-    	qr{/file_unpack$}
+    	qr{/file_unpack2$}
       ]});
   }
 

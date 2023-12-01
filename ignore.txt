@@ -9,5 +9,5 @@ pm_to_blib*
 .lwpcookies
 cover_db
 pod2htm*.tmp
-File-Unpack-*
+File-Unpack2-*
 *.orig
